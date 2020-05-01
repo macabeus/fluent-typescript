@@ -1,4 +1,4 @@
-const dedent = require('dedent-js')
+import dedent from 'dedent-js'
 
 const messageVariables = (message) => {
   if (typeof message.value === 'string') {
@@ -43,4 +43,4 @@ const buildTypePatternArguments = (resource) => {
   )
 }
 
-module.exports = buildTypePatternArguments
+export default buildTypePatternArguments

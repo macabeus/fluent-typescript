@@ -6,4 +6,4 @@ const buildTypeMessagesKey = (resource) => {
   return `type MessagesKey = ${interfaceFields}`
 }
 
-module.exports = buildTypeMessagesKey
+export default buildTypeMessagesKey
