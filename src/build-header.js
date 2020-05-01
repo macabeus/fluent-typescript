@@ -19,7 +19,7 @@ const header = dedent`
   declare global {
     interface FluentBundleTyped extends FluentBundle {
       getMessage<T extends MessagesKey>(id: T): Message<T>
-      formatPattern<T extends MessagesKey>(pattern: Pattern<T>, args?: PatternArguments<T>, errors?: Array<Error> | null): string
+      formatPattern: <T extends MessagesKey>(pattern: Pattern<T>, ...args: PatternArguments<T>) => string
     }
   }
 `

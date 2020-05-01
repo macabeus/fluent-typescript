@@ -15,7 +15,7 @@ type Message<T> = {
 declare global {
   interface FluentBundleTyped extends FluentBundle {
     getMessage<T extends MessagesKey>(id: T): Message<T>
-    formatPattern<T extends MessagesKey>(pattern: Pattern<T>, args?: PatternArguments<T>, errors?: Array<Error> | null): string
+    formatPattern: <T extends MessagesKey>(pattern: Pattern<T>, ...args: PatternArguments<T>) => string
   }
 }
 
@@ -24,10 +24,10 @@ type MessagesKey = 'hello' |
 'bye'
 type PatternArguments<T extends MessagesKey> = (
   T extends 'hello'
-  ? { 'name': string | number }:
+  ? [{ 'name': string | number }]:
 T extends 'how-are-you'
-  ? undefined:
+  ? []:
 T extends 'bye'
-  ? undefined
+  ? []
   : never
 )

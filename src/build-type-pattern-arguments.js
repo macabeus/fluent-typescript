@@ -27,13 +27,13 @@ const buildTypePatternArguments = (resource) => {
       if (hasVariables(variables)) {
         return dedent`
           T extends '${message.id}'
-            ? { ${wrapVariables(messageVariables(message)).join(',')} }
+            ? [{ ${wrapVariables(messageVariables(message)).join(',')} }]
         `
       }
 
       return dedent`
         T extends '${message.id}'
-          ? undefined
+          ? []
       `
     }).join(':\n')
 
