@@ -27,20 +27,22 @@ const buildTypePatternArguments = (resource) => {
       if (hasVariables(variables)) {
         return dedent`
           T extends '${message.id}'
-            ? { ${wrapVariables(messageVariables(message)).join(',')} }`
+            ? { ${wrapVariables(messageVariables(message)).join(',')} }
+        `
       }
 
       return dedent`
         T extends '${message.id}'
-          ? undefined`
+          ? undefined
+      `
     }).join(':\n')
 
-  return (
-`type PatternArguments<T extends MessagesKey> = (
-  ${options}
-  : never
-)`
-  )
+  return dedent`
+    type PatternArguments<T extends MessagesKey> = (
+      ${options}
+      : never
+    )
+  `
 }
 
 export default buildTypePatternArguments
