@@ -23,7 +23,7 @@ type MessagesKey = 'hello' |
 'bye'
 type PatternArguments<T extends MessagesKey> = (
   T extends 'hello'
-  ? [{ 'name': FluentArgument }]:
+  ? [{ 'firstName': FluentArgument,'lastName': FluentArgument }]:
 T extends 'how-are-you'
   ? []:
 T extends 'bye'

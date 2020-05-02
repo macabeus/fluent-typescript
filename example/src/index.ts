@@ -6,7 +6,7 @@ const bundle = new FluentBundle('pt-br') as FluentBundleTyped
 bundle.addResource(resource)
 
 const helloMessage = bundle.getMessage('hello')
-const helloText = bundle.formatPattern(helloMessage.value, { name: 'Macabeus' })
+const helloText = bundle.formatPattern(helloMessage.value, { firstName: 'Macabeus', lastName: 'Aquino' })
 console.log('Hello:', helloText)
 
 const howAreYouMessage = bundle.getMessage('how-are-you')

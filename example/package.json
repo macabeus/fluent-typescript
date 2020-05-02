@@ -6,7 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "webpack --mode development --watch --config webpack.config.js",
-    "fluent-typescript": "./node_modules/.bin/fluent-typescript"
+    "fluent-typescript": "./node_modules/.bin/fluent-typescript ./assets/locales/"
   },
   "dependencies": {
     "@fluent/bundle": "0.15.1"
