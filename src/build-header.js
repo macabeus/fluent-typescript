@@ -5,12 +5,11 @@ const bannerMessage = (
 )
 
 const header = dedent`
-  import { ComplexPattern } from '@fluent/bundle/esm/ast'
   import { FluentBundle } from '@fluent/bundle'
   
-  type Pattern<T> = T | ComplexPattern
+  type Pattern<T extends MessagesKey> = T | Parameters<FluentBundle['formatPattern']>[0]
   
-  type Message<T> = {
+  type Message<T extends MessagesKey> = {
     id: T
     value: Pattern<T>
     attributes: Record<string, Pattern<T>>
