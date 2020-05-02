@@ -1,15 +1,17 @@
-import { FluentResource } from '@fluent/bundle'
+import { FluentParser } from '@fluent/syntax'
 import dedent from 'dedent-js'
 import buildHeader from './build-header'
 import buildTypeMessagesKey from './build-type-messages-key'
 import buildTypePatternArguments from './build-type-pattern-arguments'
 
 const buildFluentTypeModule = (content) => {
-  const resource = (new FluentResource(content)).body
+  const parser = new FluentParser({ withSpans: false })
+  const ast = parser.parse(content)
+
   const fluentTypeModule = dedent`
     ${buildHeader()}
-    ${buildTypeMessagesKey(resource)}
-    ${buildTypePatternArguments(resource)}
+    ${buildTypeMessagesKey(ast)}
+    ${buildTypePatternArguments(ast)}
   `
 
   return fluentTypeModule

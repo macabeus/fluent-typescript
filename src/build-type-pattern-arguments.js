@@ -1,39 +1,31 @@
 import dedent from 'dedent-js'
 
-const messageVariables = (message) => {
-  if (typeof message.value === 'string') {
-    return []
-  }
+const messageVariablesName = (message) =>
+  message.value.elements
+    .filter(element => element.type === 'Placeable')
+    .filter(placeable => placeable.expression.type === 'VariableReference')
+    .map(placeable => placeable.expression.id.name)
 
-  const variables = message.value.reduce(
-    (acc, current) => current.type === 'var'
-      ? [...acc, current.name]
-      : acc
-    , []
-  )
-
-  return variables
-}
-
-const wrapVariables = variables => variables.map(i => `'${i}': string | number`)
+const wrapVariables = variables => variables.map(i => `'${i}': FluentArgument`)
 
 const hasVariables = variables => variables.length > 0
 
-const buildTypePatternArguments = (resource) => {
-  const options = resource
+const buildTypePatternArguments = (ast) => {
+  const messages = ast.body
+  const options = messages
     .map(message => {
-      const variables = messageVariables(message)
+      const variablesName = messageVariablesName(message)
 
-      if (hasVariables(variables)) {
+      if (hasVariables(variablesName)) {
         return dedent`
-          T extends '${message.id}'
-            ? { ${wrapVariables(messageVariables(message)).join(',')} }
+          T extends '${message.id.name}'
+            ? [{ ${wrapVariables(variablesName).join(',')} }]
         `
       }
 
       return dedent`
-        T extends '${message.id}'
-          ? undefined
+        T extends '${message.id.name}'
+          ? []
       `
     }).join(':\n')
 

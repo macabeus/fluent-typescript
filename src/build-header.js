@@ -5,12 +5,11 @@ const bannerMessage = (
 )
 
 const header = dedent`
-  import { ComplexPattern } from '@fluent/bundle/esm/ast'
-  import { FluentBundle } from '@fluent/bundle'
+  import { FluentBundle, FluentArgument } from '@fluent/bundle'
   
-  type Pattern<T> = T | ComplexPattern
+  type Pattern<T extends MessagesKey> = T | Parameters<FluentBundle['formatPattern']>[0]
   
-  type Message<T> = {
+  type Message<T extends MessagesKey> = {
     id: T
     value: Pattern<T>
     attributes: Record<string, Pattern<T>>
@@ -19,7 +18,7 @@ const header = dedent`
   declare global {
     interface FluentBundleTyped extends FluentBundle {
       getMessage<T extends MessagesKey>(id: T): Message<T>
-      formatPattern<T extends MessagesKey>(pattern: Pattern<T>, args?: PatternArguments<T>, errors?: Array<Error> | null): string
+      formatPattern: <T extends MessagesKey>(pattern: Pattern<T>, ...args: PatternArguments<T>) => string
     }
   }
 `
