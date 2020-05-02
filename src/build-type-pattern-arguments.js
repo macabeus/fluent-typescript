@@ -6,7 +6,7 @@ const messageVariablesName = (message) =>
     .filter(placeable => placeable.expression.type === 'VariableReference')
     .map(placeable => placeable.expression.id.name)
 
-const wrapVariables = variables => variables.map(i => `'${i}': string | number`)
+const wrapVariables = variables => variables.map(i => `'${i}': FluentArgument`)
 
 const hasVariables = variables => variables.length > 0
 

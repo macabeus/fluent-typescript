@@ -5,7 +5,7 @@ const bannerMessage = (
 )
 
 const header = dedent`
-  import { FluentBundle } from '@fluent/bundle'
+  import { FluentBundle, FluentArgument } from '@fluent/bundle'
   
   type Pattern<T extends MessagesKey> = T | Parameters<FluentBundle['formatPattern']>[0]
   
