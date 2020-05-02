@@ -10,13 +10,13 @@ const buildTypePatternArguments = (messagesVariables) => {
       if (hasVariables(variables)) {
         return dedent`
           T extends '${message}'
-            ? [{ ${wrapVariables(variables).join(',')} }]
+            ? [T, { ${wrapVariables(variables).join(',')} }]
         `
       }
 
       return dedent`
         T extends '${message}'
-          ? []
+          ? [T]
       `
     }).join(':\n')
 
