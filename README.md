@@ -1,5 +1,5 @@
-# fluent-typescript-loader
-> Webpack loader to create TypeScript declarations for Fluent files
+# fluent-typescript
+> 📦 Generate automatically TypeScript declarations for Fluent files
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/9501115/79704023-26c7d080-82a7-11ea-962e-82b90bdf89f1.png">
@@ -9,9 +9,9 @@
   <img src="https://user-images.githubusercontent.com/9501115/79704154-e3ba2d00-82a7-11ea-988e-c0d568a46015.png">
 </p>
 
-**Fluent** is a Mozilla's programming language for natural-sounding translations. And **fluent-typescript-loader** is a Webpack Loader to automatically generate type definitions for its mensagens.
+**Fluent** is a Mozilla's programming language for natural-sounding translations. And **fluent-typescript** is a tool to automatically generate type definitions for its mensagens. So you'll have safer changes on your translates messages by types safes provided by TS. Never more will have a missing variable or forget to delete an old message. Sounds like magic, right?
 
-> :warning: It's a working in project project! At this moment, **you should not use it on production**!
+> :warning: It's a working in process project! At this moment, **you should not use it on production**!
 
 - [Official Fluent's website](https://projectfluent.org/)
 - [Fluent's Playground](https://projectfluent.org/play/)
@@ -22,34 +22,33 @@
 
 Step by step:
 
-1 - Add  `fluent-typescript-loader` on your project:
+1 - Add `fluent-typescript` on your project:
 
 ```
-> npm install fluent-typescript-loader --save-dev
+> npm install fluent-typescript --save-dev
 - or -
-> yarn add fluent-typescript-loader --dev
+> yarn add fluent-typescript --dev
 ```
 
-2 - Add this step on your webpack config:
+2 - Add this script on your `package.json` config:
 
 ```js
 {
-  test: /\.ftl$/,
-  use: {
-    loader: 'fluent-typescript-loader',
+  "scripts": {
+    "fluent-typescript": "./node_modules/.bin/fluent-typescript"
   },
 },
 ```
 
-> :warning: If you are using others loaders on `.ftl` files, you should add the `fluent-typescript-loader` step on last!
+3 - Run `fluent-typescript`:
 
-3 - Add someone on your TS files:
-
-```ts
-import '../assets/locales/pt-br/translations.ftl'
+```
+> npm run fluent-typescript
 ```
 
-4 - And finally, add a cast on `FluentBundle` call:
+Now, your FTL files will be compiled into a `.d.ts`. The last remaining step is import it on our code.
+
+4 - Add a cast on `FluentBundle` call:
 
 ```ts
 const bundle = new FluentBundle('pt-br') as FluentBundleTyped
@@ -57,6 +56,45 @@ const bundle = new FluentBundle('pt-br') as FluentBundleTyped
 
 Finish! Now you have amazing types on your translations messages 🎉
 
-## With thanks
+### How to run the example
 
-This package borrows heavily from [css-modules-typescript-loader](https://github.com/Jimdo/css-modules-typescript-loader).
+You can quicly run the example and see the magic happens.
+
+1 - Start `fluent-typescript`:
+
+```
+> cd example
+> npm run fluent-typescript
+```
+
+2 - Start Webpack:
+
+> Webpack isn't mandatory. It's just an example.
+
+```
+> npm run start
+```
+
+The application will be built, we could run using `node dist/main.js`, but what happens if we adds a new variable on a message?
+
+3 - Change `example/assets/locales/pt-br/translations.ftl` adding a new variable somewhere:
+
+```diff
+-bye = Tchau
++bye = Tchau, { $name }
+```
+
+4 - Now you'll see that your build process broke! Let's fix that on `example/src/index.ts`
+
+```ts
++++ b/example/src/index.ts
+-const byeText = bundle.formatPattern(byeMessage.value)
++const byeText = bundle.formatPattern(byeMessage.value, { name: 'Macabeus' })
+```
+
+Now everything is fine again! Notice that we have a good auto-compelte, as well as something like that won't work:
+
+```ts
+const byeText = bundle.formatPattern(byeMessage.value, { name: [] }) // not work because array is a wrong type
+const byeText = bundle.formatPattern(byeMessage.value, { wrongVariable: 'Macabeus' }) // not work because of the wrong variable name
+```

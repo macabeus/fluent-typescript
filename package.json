@@ -1,8 +1,11 @@
 {
-  "name": "fluent-typescript-loader",
+  "name": "fluent-typescript",
   "version": "0.0.2",
-  "description": "Webpack loader to create TypeScript declarations for Fluent files",
-  "main": "src/loader.js",
+  "description": "CLI tool to automatically generate TypeScript declarations for Fluent files",
+  "main": "dist/index.js",
+  "bin": {
+    "fluent-typescript": "cli/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/macabeus/fluent-typescript-loader"
@@ -10,10 +13,12 @@
   "author": "macabeus",
   "license": "MIT",
   "scripts": {
+    "start": "./node_modules/.bin/rollup -c rollup.config.js --watch",
     "test": "jest"
   },
   "dependencies": {
     "@fluent/bundle": "0.15.1",
+    "chokidar": "3.4.0",
     "dedent-js": "1.0.1",
     "loader-utils": "2.0.0"
   },
@@ -23,7 +28,8 @@
     "babel-jest": "25.3.0",
     "jest": "25.3.0",
     "memfs": "3.1.2",
-    "webpack": "4.42.1",
-    "webpack-cli": "3.3.11"
+    "rollup": "2.7.2",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-commonjs": "10.1.0"
   }
 }

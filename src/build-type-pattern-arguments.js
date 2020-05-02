@@ -1,4 +1,4 @@
-const dedent = require('dedent-js')
+import dedent from 'dedent-js'
 
 const messageVariables = (message) => {
   if (typeof message.value === 'string') {
@@ -27,20 +27,22 @@ const buildTypePatternArguments = (resource) => {
       if (hasVariables(variables)) {
         return dedent`
           T extends '${message.id}'
-            ? { ${wrapVariables(messageVariables(message)).join(',')} }`
+            ? { ${wrapVariables(messageVariables(message)).join(',')} }
+        `
       }
 
       return dedent`
         T extends '${message.id}'
-          ? undefined`
+          ? undefined
+      `
     }).join(':\n')
 
-  return (
-`type PatternArguments<T extends MessagesKey> = (
-  ${options}
-  : never
-)`
-  )
+  return dedent`
+    type PatternArguments<T extends MessagesKey> = (
+      ${options}
+      : never
+    )
+  `
 }
 
-module.exports = buildTypePatternArguments
+export default buildTypePatternArguments

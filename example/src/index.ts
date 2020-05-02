@@ -12,3 +12,7 @@ console.log('Hello:', helloText)
 const howAreYouMessage = bundle.getMessage('how-are-you')
 const howAreYouText = bundle.formatPattern(howAreYouMessage.value)
 console.log('How Are You:', howAreYouText)
+
+const byeMessage = bundle.getMessage('bye')
+const byeText = bundle.formatPattern(byeMessage.value)
+console.log('Bye:', byeText)
