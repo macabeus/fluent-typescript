@@ -35,10 +35,12 @@ Step by step:
 ```js
 {
   "scripts": {
-    "fluent-typescript": "./node_modules/.bin/fluent-typescript"
+    "fluent-typescript": "./node_modules/.bin/fluent-typescript ./assets/locales/"
   },
 },
 ```
+
+The argument `./assets/locales/` is the path where the type definition file will be saved.
 
 3 - Run `fluent-typescript`:
 
@@ -97,4 +99,26 @@ Now everything is fine again! Notice that we have a good auto-compelte, as well 
 ```ts
 const byeText = bundle.formatPattern(byeMessage.value, { name: [] }) // not work because array is a wrong type
 const byeText = bundle.formatPattern(byeMessage.value, { wrongVariable: 'Macabeus' }) // not work because of the wrong variable name
+```
+
+# How types are compiled
+
+## Asymmetric translations
+
+Let's say that we have a `hello` message on our application and we should translate that to Japanese and Portuguese. Since in Japanese is more common to use the last name, and in Portuguese is more natural to use the first name, we'll have that:
+
+```ftl
+# locales/jp/translations.ftl
+hello = こんにちは{ $lastName }
+
+# locales/pt-br/translations.ftl
+hello = Olá { $firstName }
+```
+
+Despite that _in practice_ we could just use `firstName` or `lastName`, our type definition file want to be most safe that could, so you'll always need to use all possibles arguments required by a message:
+
+```ts
+bundle.formatPattern(helloMessage.value, { firstName: 'Macabeus', lastName: 'Aquino' }) // ok
+bundle.formatPattern(helloMessage.value, { firstName: 'Macabeus' }) // error
+bundle.formatPattern(helloMessage.value, { lastName: 'Aquino' }) // error
 ```

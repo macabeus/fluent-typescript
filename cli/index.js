@@ -2,16 +2,21 @@
 
 const chokidar = require('chokidar')
 const fs = require('fs')
-const path = require('path')
-const buildFluentTypeModule = require('../dist')
+const glob = require('glob')
+const { start, buildFluentTypeModule } = require('../dist')
 
-const getTypeDefinitionFilename = filename => {
-  const dirName = path.dirname(filename)
-  const baseName = path.basename(filename)
-  return path.join(dirName, `${baseName}.d.ts`)
-}
+const startWatcher = (fileSystemApi, typeDefinitionFilepath) => {
+  const typeDefinitionFilename = `${typeDefinitionFilepath}/translations.ftl.d.ts`
 
-const startWatcher = (fileSystemApi) => {
+  glob('**/*.ftl', { ignore: ['node_modules/**/*', '.git/**/*'] }, (errors, matches) => {
+    const files = matches.map(path => ({
+      path,
+      content: fileSystemApi.readFileSync(path, { encoding: 'utf-8' }),
+    }))
+
+    start(files)
+  })
+
   const watcher = chokidar.watch('**/*.ftl', { ignored: ['node_modules/**/*', '.git/**/*'] })
 
   watcher
@@ -19,9 +24,8 @@ const startWatcher = (fileSystemApi) => {
     .on('change', (path) => {
       console.log(`🔍 File was changed: ${path}`)
 
-      const typeDefinitionFilename = getTypeDefinitionFilename(path)
       const content = fileSystemApi.readFileSync(path, { encoding: 'utf-8' })
-      const fluentTypeModule = buildFluentTypeModule(content)
+      const fluentTypeModule = buildFluentTypeModule({ path, content })
 
       fileSystemApi.writeFile(
         typeDefinitionFilename,
@@ -41,5 +45,13 @@ const startWatcher = (fileSystemApi) => {
 }
 
 if (require.main === module) {
-  startWatcher(fs)
+  const typeDefinitionFilepath = process.argv[2]
+
+  if (typeDefinitionFilepath === undefined) {
+    console.error('❌ Error: missing argument with the path to save the type definition file!')
+    console.error('Example: fluent-typescript ./assets/locales/')
+    return
+  }
+
+  startWatcher(fs, typeDefinitionFilepath)
 }
