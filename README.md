@@ -105,6 +105,10 @@ const byeText = bundle.formatPattern(byeMessage.value, { wrongVariable: 'Macabeu
 
 ## Asymmetric translations
 
+**tl;dr:** You should always use all variables that a message could need.
+
+**Detailed explanation:**
+
 Let's say that we have a `hello` message on our application and we should translate that to Japanese and Portuguese. Since in Japanese is more common to use the last name, and in Portuguese is more natural to use the first name, we'll have that:
 
 ```ftl
@@ -121,4 +125,21 @@ Despite that _in practice_ we could just use `firstName` or `lastName`, our type
 bundle.formatPattern(helloMessage.value, { firstName: 'Macabeus', lastName: 'Aquino' }) // ok
 bundle.formatPattern(helloMessage.value, { firstName: 'Macabeus' }) // error
 bundle.formatPattern(helloMessage.value, { lastName: 'Aquino' }) // error
+```
+
+Analogously on a message with selector. You should always use all variables:
+
+```ftl
+award =
+  { $place ->
+     [first]  You won first! Your prize is { $amount } bitcoins
+    *[other] You won { $place }! Congratulations!
+  }
+```
+
+```ts
+bundle.formatPattern(helloMessage.value, { place: 'first', amount: 0.1 }) // ok
+bundle.formatPattern(helloMessage.value, { place: 'second', amount: 0 }) // ok
+bundle.formatPattern(helloMessage.value, { place: 'first' }) // error
+bundle.formatPattern(helloMessage.value, { place: 'second' }) // error
 ```

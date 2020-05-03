@@ -131,4 +131,38 @@ describe('global-state', () => {
       'how-are-you': [],
     })
   })
+
+  test('Should can read variables on a selector', () => {
+    const fixtureEn: CliFluentFile = {
+      path: 'en.ftl',
+      content: dedent`
+        emails =
+          { $unreadEmails ->
+              [one] { $name } has one unread email.
+            *[other] { $name } has { $unreadEmails } unread emails.
+          }
+      `,
+    }
+
+    updateGlobalState({ type: 'addContent', payload: fixtureEn })
+    const messagesVariablesPt = getMessagesVariables()
+    expect(messagesVariablesPt).toEqual({
+      emails: ['name', 'unreadEmails'],
+    })
+  })
+
+  test('Should can read variables on a built-in function', () => {
+    const fixtureEn: CliFluentFile = {
+      path: 'en.ftl',
+      content: dedent`
+        time-elapsed = Time elapsed: { NUMBER($duration, maximumFractionDigits: 0) }s.
+      `,
+    }
+
+    updateGlobalState({ type: 'addContent', payload: fixtureEn })
+    const messagesVariablesPt = getMessagesVariables()
+    expect(messagesVariablesPt).toEqual({
+      'time-elapsed': ['duration'],
+    })
+  })
 })
