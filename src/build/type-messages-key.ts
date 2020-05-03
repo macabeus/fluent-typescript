@@ -1,4 +1,4 @@
-const buildTypeMessagesKey = (messagesVariables) => {
+const buildTypeMessagesKey = (messagesVariables: MessageVariablesMap) => {
   const messages = Object.keys(messagesVariables)
   const interfaceFields = messages
     .map(message => `'${message}'`)

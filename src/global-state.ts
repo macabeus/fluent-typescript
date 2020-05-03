@@ -1,28 +1,47 @@
-import { FluentParser } from '@fluent/syntax'
+import { FluentParser, Message, Placeable, VariableReference } from '@fluent/syntax'
 import { fromEntries } from './helpers'
 
-const initialState = () => ({
+type GlobalState = {
+  messages: {
+    [ftlPath in string]: {
+      [messageIdentifier in string]: MessageVariable[]
+    }
+  }
+}
+
+const initialState = (): GlobalState => ({
   messages: {},
 })
 
 let globalState = initialState()
 
-const messageVariablesName = (message) =>
-  message.value.elements
+const messageVariablesName = (message: Message) =>
+  message.value?.elements
     .filter(element => element.type === 'Placeable')
-    .filter(placeable => placeable.expression.type === 'VariableReference')
-    .map(placeable => placeable.expression.id.name)
+    .filter((placeable: Placeable) => placeable.expression.type === 'VariableReference')
+    .map(placeable => (placeable.expression as VariableReference).id.name as MessageVariable)
 
-const updateGlobalState = (type, payload) => {
-  if (type === 'addContent') {
+type UpdateGlobalStateParams = (
+  { type: 'addContent', payload: CliFluentFile } |
+  { type: 'updateContent', payload: CliFluentFile } |
+  { type: 'reset' }
+)
+const updateGlobalState = (params: UpdateGlobalStateParams) => {
+  if (params.type === 'addContent') {
+    const { payload } = params
+
     const parser = new FluentParser({ withSpans: false })
     const ast = parser.parse(payload.content)
 
     ast
       .body
       .filter(node => node.type === 'Message')
-      .map(message => [message.id.name, messageVariablesName(message)])
+      .map((message: Message) => [message.id.name, messageVariablesName(message)] as const)
       .forEach(([name, variables]) => {
+        if (variables === undefined) {
+          return
+        }
+
         if (globalState.messages[name] === undefined) {
           globalState.messages[name] = {}
         }
@@ -33,14 +52,16 @@ const updateGlobalState = (type, payload) => {
     return
   }
 
-  if (type === 'updateContent') {
+  if (params.type === 'updateContent') {
+    const { payload } = params
+
     const parser = new FluentParser({ withSpans: false })
     const ast = parser.parse(payload.content)
 
     const messagesVariable = ast
       .body
       .filter(node => node.type === 'Message')
-      .map(message => [message.id.name, messageVariablesName(message)])
+      .map((message: Message) => [message.id.name, messageVariablesName(message)] as const)
 
     // Remove messages not used anymore
     const messagesNamesInUse = new Set(messagesVariable.map(([name]) => name))
@@ -58,6 +79,10 @@ const updateGlobalState = (type, payload) => {
     // Update messages
     messagesVariable
       .forEach(([name, variables]) => {
+        if (variables === undefined) {
+          return
+        }
+
         if (globalState.messages[name] === undefined) {
           globalState.messages[name] = {}
         }
@@ -68,13 +93,13 @@ const updateGlobalState = (type, payload) => {
     return
   }
 
-  if (type === 'reset') {
+  if (params.type === 'reset') {
     globalState = initialState()
     return
   }
 }
 
-const getMessagesVariables = () => {
+const getMessagesVariables = (): MessageVariablesMap => {
   const entries = Object.entries(globalState.messages)
     .map(([message, filesToVariable]) => {
       const variablesSet = new Set(
@@ -84,7 +109,7 @@ const getMessagesVariables = () => {
         .from(variablesSet)
         .sort()
 
-      return [message, variablesArray]
+      return [message, variablesArray] as [string, MessageVariable[]]
     })
 
   const messageVariables = fromEntries(entries)
