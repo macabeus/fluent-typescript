@@ -4,7 +4,7 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "module": "es6",
-    "target": "es5",
+    "target": "es6",
     "strictNullChecks": true,
     "rootDirs": ["src", "test"],
     "esModuleInterop": true,

@@ -1,5 +1,6 @@
-import { FluentParser, Message, Placeable, VariableReference } from '@fluent/syntax'
-import { fromEntries } from './helpers'
+import { FluentParser } from '@fluent/syntax'
+import { fromEntries } from '../helpers'
+import listMessagesVariables from './list-messages-variables'
 
 type GlobalState = {
   messages: {
@@ -15,12 +16,6 @@ const initialState = (): GlobalState => ({
 
 let globalState = initialState()
 
-const messageVariablesName = (message: Message) =>
-  message.value?.elements
-    .filter(element => element.type === 'Placeable')
-    .filter((placeable: Placeable) => placeable.expression.type === 'VariableReference')
-    .map(placeable => (placeable.expression as VariableReference).id.name as MessageVariable)
-
 type UpdateGlobalStateParams = (
   { type: 'addContent', payload: CliFluentFile } |
   { type: 'updateContent', payload: CliFluentFile } |
@@ -33,15 +28,8 @@ const updateGlobalState = (params: UpdateGlobalStateParams) => {
     const parser = new FluentParser({ withSpans: false })
     const ast = parser.parse(payload.content)
 
-    ast
-      .body
-      .filter(node => node.type === 'Message')
-      .map((message: Message) => [message.id.name, messageVariablesName(message)] as const)
+    Object.entries(listMessagesVariables(ast))
       .forEach(([name, variables]) => {
-        if (variables === undefined) {
-          return
-        }
-
         if (globalState.messages[name] === undefined) {
           globalState.messages[name] = {}
         }
@@ -58,13 +46,10 @@ const updateGlobalState = (params: UpdateGlobalStateParams) => {
     const parser = new FluentParser({ withSpans: false })
     const ast = parser.parse(payload.content)
 
-    const messagesVariable = ast
-      .body
-      .filter(node => node.type === 'Message')
-      .map((message: Message) => [message.id.name, messageVariablesName(message)] as const)
+    const messagesVariables = listMessagesVariables(ast)
 
     // Remove messages not used anymore
-    const messagesNamesInUse = new Set(messagesVariable.map(([name]) => name))
+    const messagesNamesInUse = new Set(Object.keys(messagesVariables))
     Object.keys(globalState.messages)
       .forEach(name => {
         if (messagesNamesInUse.has(name) === false) {
@@ -77,12 +62,8 @@ const updateGlobalState = (params: UpdateGlobalStateParams) => {
       })
 
     // Update messages
-    messagesVariable
+    Object.entries(messagesVariables)
       .forEach(([name, variables]) => {
-        if (variables === undefined) {
-          return
-        }
-
         if (globalState.messages[name] === undefined) {
           globalState.messages[name] = {}
         }
