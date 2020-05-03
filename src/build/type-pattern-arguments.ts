@@ -1,10 +1,12 @@
 import dedent from 'dedent-js'
 
-const wrapVariables = variables => variables.map(i => `'${i}': FluentArgument`)
+type Variables = MessageVariable[]
 
-const hasVariables = variables => variables.length > 0
+const wrapVariables = (variables: Variables) => variables.map(i => `'${i}': FluentArgument`)
 
-const buildTypePatternArguments = (messagesVariables) => {
+const hasVariables = (variables: Variables) => variables.length > 0
+
+const buildTypePatternArguments = (messagesVariables: MessageVariablesMap) => {
   const options = Object.entries(messagesVariables)
     .map(([message, variables]) => {
       if (hasVariables(variables)) {

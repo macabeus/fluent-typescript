@@ -1,11 +1,11 @@
 import build from './build'
 import { updateGlobalState } from './global-state'
 
-const start = files =>
-  files.forEach(file => updateGlobalState('addContent', file))
+const start = (files: CliFluentFile[]) =>
+  files.forEach(file => updateGlobalState({ type: 'addContent', payload: file }))
 
-const buildFluentTypeModule = file => {
-  updateGlobalState('updateContent', file)
+const buildFluentTypeModule = (file: CliFluentFile) => {
+  updateGlobalState({ type: 'updateContent', payload: file })
   const fluentTypeModule = build()
   return fluentTypeModule
 }

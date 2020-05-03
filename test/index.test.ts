@@ -1,5 +1,5 @@
 import dedent from 'dedent-js'
-import { buildFluentTypeModule, start } from '../src'
+const { buildFluentTypeModule, start } = require('../src')
 
 test('Should match the types definitions', async () => {
   const fixturePt = dedent`

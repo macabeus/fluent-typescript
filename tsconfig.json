@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "module": "es6",
+    "target": "es5",
+    "strictNullChecks": true,
+    "rootDirs": ["src", "test"],
+    "esModuleInterop": true,
+    "allowJs": false,
+    "lib": ["es2019"]
+  }
+}
