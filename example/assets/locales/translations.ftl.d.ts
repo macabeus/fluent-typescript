@@ -3,18 +3,16 @@
 
 import { FluentBundle, FluentArgument } from '@fluent/bundle'
 
-type Pattern<T extends MessagesKey> = T | Parameters<FluentBundle['formatPattern']>[0]
-
 type Message<T extends MessagesKey> = {
   id: T
-  value: Pattern<T>
-  attributes: Record<string, Pattern<T>>
+  value: T
+  attributes: Record<string, T>
 }
 
 declare global {
   interface FluentBundleTyped extends FluentBundle {
     getMessage<T extends MessagesKey>(id: T): Message<T>
-    formatPattern: <T extends MessagesKey>(pattern: Pattern<T>, ...args: PatternArguments<T>) => string
+    formatPattern: <T extends MessagesKey>(...args: PatternArguments<T>) => string
   }
 }
 
@@ -23,10 +21,10 @@ type MessagesKey = 'hello' |
 'bye'
 type PatternArguments<T extends MessagesKey> = (
   T extends 'hello'
-  ? [{ 'firstName': FluentArgument,'lastName': FluentArgument }]:
+  ? [T, { 'firstName': FluentArgument,'lastName': FluentArgument }]:
 T extends 'how-are-you'
-  ? []:
+  ? [T]:
 T extends 'bye'
-  ? []
+  ? [T]
   : never
 )
