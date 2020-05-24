@@ -10,17 +10,20 @@ type Message<T extends MessagesKey> = {
 import { FluentArgument } from '@fluent/bundle'
 import { TransProps } from 'react-i18next'
 
+type TFunctionTyped = <T extends MessagesKey>(...args: PatternArguments<T>) => string
+
 declare module 'react-i18next' {
   interface UseTranslationResponsePatched extends Omit<UseTranslationResponse, 't'> {
-    t: <T extends MessagesKey>(...args: PatternArguments<T>) => string
+    t: TFunctionTyped
   }
 
   function useTranslation(ns?: Namespace, options?: UseTranslationOptions): UseTranslationResponsePatched
 }
 
 declare global {
-  interface TransPropsTyped<E extends Element = HTMLDivElement> extends Omit<TransProps<E>, 'i18nKey'> {
+  interface TransPropsTyped<E extends Element = HTMLDivElement> extends Omit<Omit<TransProps<E>, 'i18nKey'>, 't'> {
     i18nKey: MessagesKey
+    t: TFunctionTyped
   }
 
   function TypeTransTyped<E extends Element = HTMLDivElement>(props: TransPropsTyped<E>): React.ReactElement;

@@ -25,6 +25,9 @@ i18n
   .use(FluentBackend)
   .use(initReactI18next)
   .init({
+    debug: true,
+    saveMissing: true,
+
     backend,
 
     keySeparator: false,

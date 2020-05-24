@@ -8,11 +8,10 @@ const Hello = () => {
   return (
     <>
       <p>{t('hello', { firstName: 'Macabeus', lastName: 'Aquino' })}</p>
-
       <p>{t('bye')}</p>
 
-      <TransTyped i18nKey='age'>
-        Age <strong>{{ userAge: 23 }}</strong>
+      <TransTyped i18nKey='trans-example' t={t}>
+        Hello <strong>{{name: 'Macabeus'}}</strong>, how are you?
       </TransTyped>
     </>
   )
