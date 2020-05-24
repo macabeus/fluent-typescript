@@ -3,13 +3,13 @@
 const chokidar = require('chokidar')
 const fs = require('fs')
 const glob = require('glob')
-const { start, updateContent, buildFluentTypeModule } = require('../dist')
+const { start, updateContent, buildFluentTypeModule, targetsSupported } = require('../dist')
 
-const startWatcher = (fileSystemApi, typeDefinitionFilepath) => {
+const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath) => {
   const typeDefinitionFilename = `${typeDefinitionFilepath}/translations.ftl.d.ts`
 
   const emitFluentTypeModule = () => {
-    const fluentTypeModule = buildFluentTypeModule()
+    const fluentTypeModule = buildFluentTypeModule(typeDefinitionTarget)
 
     fileSystemApi.writeFile(
       typeDefinitionFilename,
@@ -52,13 +52,26 @@ const startWatcher = (fileSystemApi, typeDefinitionFilepath) => {
 }
 
 if (require.main === module) {
-  const typeDefinitionFilepath = process.argv[2]
+  const typeDefinitionTarget = process.argv[2]
+  const typeDefinitionFilepath = process.argv[3]
 
-  if (typeDefinitionFilepath === undefined) {
-    console.error('❌ Error: missing argument with the path to save the type definition file!')
-    console.error('Example: fluent-typescript ./assets/locales/')
+  if (typeDefinitionTarget === undefined) {
+    console.error('❌ Error: missing argument with the target!')
+    console.error('Example: fluent-typescript vanilla ./assets/locales/')
     return
   }
 
-  startWatcher(fs, typeDefinitionFilepath)
+  if (targetsSupported.includes(typeDefinitionTarget) === false) {
+    console.error('❌ Error: target not supported!')
+    console.error(`At this moment, we support only: ${targetsSupported.join(', ')}`)
+    return
+  }
+
+  if (typeDefinitionFilepath === undefined) {
+    console.error('❌ Error: missing argument with the path to save the type definition file!')
+    console.error('Example: fluent-typescript vanilla ./assets/locales/')
+    return
+  }
+
+  startWatcher(fs, typeDefinitionTarget, typeDefinitionFilepath)
 }
