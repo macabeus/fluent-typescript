@@ -3,10 +3,29 @@
 const chokidar = require('chokidar')
 const fs = require('fs')
 const glob = require('glob')
-const { start, buildFluentTypeModule } = require('../dist')
+const { start, updateContent, buildFluentTypeModule } = require('../dist')
 
 const startWatcher = (fileSystemApi, typeDefinitionFilepath) => {
   const typeDefinitionFilename = `${typeDefinitionFilepath}/translations.ftl.d.ts`
+
+  const emitFluentTypeModule = () => {
+    const fluentTypeModule = buildFluentTypeModule()
+
+    fileSystemApi.writeFile(
+      typeDefinitionFilename,
+      fluentTypeModule,
+      { encoding: 'utf-8' },
+      (err) => {
+        if (err) {
+          console.log('❌ Error')
+          console.log(err)
+          return
+        }
+
+        console.log(`🏁 Type definition updated: ${typeDefinitionFilename}`)
+      }
+    )
+  }
 
   glob('**/*.ftl', { ignore: ['node_modules/**/*', '.git/**/*'] }, (errors, matches) => {
     const files = matches.map(path => ({
@@ -15,6 +34,7 @@ const startWatcher = (fileSystemApi, typeDefinitionFilepath) => {
     }))
 
     start(files)
+    emitFluentTypeModule()
   })
 
   const watcher = chokidar.watch('**/*.ftl', { ignored: ['node_modules/**/*', '.git/**/*'] })
@@ -25,22 +45,9 @@ const startWatcher = (fileSystemApi, typeDefinitionFilepath) => {
       console.log(`🔍 File was changed: ${path}`)
 
       const content = fileSystemApi.readFileSync(path, { encoding: 'utf-8' })
-      const fluentTypeModule = buildFluentTypeModule({ path, content })
+      updateContent({ path, content })
 
-      fileSystemApi.writeFile(
-        typeDefinitionFilename,
-        fluentTypeModule,
-        { encoding: 'utf-8' },
-        (err) => {
-          if (err) {
-            console.log('❌ Error')
-            console.log(err)
-            return
-          }
-
-          console.log(`🏁 Type definition updated: ${typeDefinitionFilename}`)
-        }
-      )
+      emitFluentTypeModule()
     })
 }
 
