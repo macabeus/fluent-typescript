@@ -9,7 +9,10 @@ export default {
     format: 'iife',
   },
   plugins: [
-    typescript(),
+    typescript({
+      typescript: require('typescript'),
+      exclude: ['node_modules', './example-react-18next', './example-vanilla'],
+    }),
     resolve(),
     commonJS({
       include: 'node_modules/**',

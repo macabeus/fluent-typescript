@@ -1,4 +1,5 @@
 {
+  "exclude": ["./example-react-18next", "./example-vanilla"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
