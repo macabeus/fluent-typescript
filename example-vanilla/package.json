@@ -1,12 +1,12 @@
 {
-  "name": "fluent-typescript-example",
+  "name": "fluent-typescript-example-vanilla",
   "version": "0.0.1",
   "repository": {},
   "license": "MIT",
   "main": "src/index.ts",
   "scripts": {
     "start": "webpack --mode development --watch --config webpack.config.js",
-    "fluent-typescript": "./node_modules/.bin/fluent-typescript ./assets/locales/"
+    "fluent-typescript": "./node_modules/.bin/fluent-typescript vanilla ./assets/locales/"
   },
   "dependencies": {
     "@fluent/bundle": "0.15.1"

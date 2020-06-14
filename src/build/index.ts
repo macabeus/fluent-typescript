@@ -4,11 +4,11 @@ import buildTypeMessagesKey from './type-messages-key'
 import buildTypePatternArguments from './type-pattern-arguments'
 import { getMessagesVariables } from '../global-state'
 
-const build = () => {
+const build = (target: TargetsSupported) => {
   const messagesVariables = getMessagesVariables()
 
   const fluentTypeModule = dedent`
-    ${buildHeader()}
+    ${buildHeader(target)}
     ${buildTypeMessagesKey(messagesVariables)}
     ${buildTypePatternArguments(messagesVariables)}
   `

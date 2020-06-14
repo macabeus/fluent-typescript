@@ -1,8 +1,19 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
-    'plugin:@typescript-eslint/recommended'
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
     'object-curly-spacing': ['error', 'always'],
     'semi': ['error', 'never'],

@@ -9,6 +9,8 @@ const updateContent = (file: CliFluentFile) =>
 
 const buildFluentTypeModule = build
 
+const targetsSupported: Array<TargetsSupported> = ['vanilla', 'react-18next']
+
 // TODO: is necessary to export as common js to be available to cli.js
 // but probably there are better approach to do that
-module.exports = { start, updateContent, buildFluentTypeModule }
+module.exports = { start, updateContent, buildFluentTypeModule, targetsSupported }
