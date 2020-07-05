@@ -7,7 +7,7 @@ type Message<T extends MessagesKey> = {
   attributes: Record<string, T>
 }
 
-import { FluentArgument } from '@fluent/bundle'
+import { FluentVariable } from '@fluent/bundle'
 import { TransProps } from 'react-i18next'
 
 declare module 'react-i18next' {
@@ -23,7 +23,7 @@ type MessagesKey = 'hello' |
 'bye'
 type PatternArguments<T extends MessagesKey> = (
   T extends 'hello'
-  ? [T, { 'firstName': FluentArgument,'lastName': FluentArgument }]:
+  ? [T, { 'firstName': FluentVariable,'lastName': FluentVariable }]:
 T extends 'how-are-you'
   ? [T]:
 T extends 'bye'

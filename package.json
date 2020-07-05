@@ -18,7 +18,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@fluent/syntax": "0.15.0",
+    "@fluent/syntax": "0.16.0",
     "chokidar": "3.4.0",
     "dedent-js": "1.0.1",
     "glob": "7.1.6",

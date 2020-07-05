@@ -28,7 +28,7 @@ test('Should match the types definitions for vanilla target', async () => {
       attributes: Record<string, T>
     }
 
-    import { FluentBundle, FluentArgument } from '@fluent/bundle'
+    import { FluentBundle, FluentVariable } from '@fluent/bundle'
 
     declare global {
       interface FluentBundleTyped extends FluentBundle {
@@ -42,7 +42,7 @@ test('Should match the types definitions for vanilla target', async () => {
     'bye'
     type PatternArguments<T extends MessagesKey> = (
       T extends 'hello'
-      ? [T, { 'firstName': FluentArgument,'lastName': FluentArgument }]:
+      ? [T, { 'firstName': FluentVariable,'lastName': FluentVariable }]:
     T extends 'how-are-you'
       ? [T]:
     T extends 'bye'
@@ -68,7 +68,7 @@ test('Should match the types definitions for vanilla target', async () => {
       attributes: Record<string, T>
     }
 
-    import { FluentBundle, FluentArgument } from '@fluent/bundle'
+    import { FluentBundle, FluentVariable } from '@fluent/bundle'
 
     declare global {
       interface FluentBundleTyped extends FluentBundle {
@@ -81,7 +81,7 @@ test('Should match the types definitions for vanilla target', async () => {
     'how-are-you'
     type PatternArguments<T extends MessagesKey> = (
       T extends 'hello'
-      ? [T, { 'firstName': FluentArgument,'lastName': FluentArgument }]:
+      ? [T, { 'firstName': FluentVariable,'lastName': FluentVariable }]:
     T extends 'how-are-you'
       ? [T]
       : never
@@ -116,7 +116,7 @@ test('Should match the types definitions for react-18next target', async () => {
       attributes: Record<string, T>
     }
 
-    import { FluentArgument } from '@fluent/bundle'
+    import { FluentVariable } from '@fluent/bundle'
     import { TransProps } from 'react-i18next'
 
     declare module 'react-i18next' {
@@ -132,7 +132,7 @@ test('Should match the types definitions for react-18next target', async () => {
     'bye'
     type PatternArguments<T extends MessagesKey> = (
       T extends 'hello'
-      ? [T, { 'firstName': FluentArgument,'lastName': FluentArgument }]:
+      ? [T, { 'firstName': FluentVariable,'lastName': FluentVariable }]:
     T extends 'how-are-you'
       ? [T]:
     T extends 'bye'
@@ -158,7 +158,7 @@ test('Should match the types definitions for react-18next target', async () => {
       attributes: Record<string, T>
     }
 
-    import { FluentArgument } from '@fluent/bundle'
+    import { FluentVariable } from '@fluent/bundle'
     import { TransProps } from 'react-i18next'
 
     declare module 'react-i18next' {
@@ -173,7 +173,7 @@ test('Should match the types definitions for react-18next target', async () => {
     'how-are-you'
     type PatternArguments<T extends MessagesKey> = (
       T extends 'hello'
-      ? [T, { 'firstName': FluentArgument,'lastName': FluentArgument }]:
+      ? [T, { 'firstName': FluentVariable,'lastName': FluentVariable }]:
     T extends 'how-are-you'
       ? [T]
       : never

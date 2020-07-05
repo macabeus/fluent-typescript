@@ -5,7 +5,7 @@ const bannerMessage = (
 )
 
 const vanillaSupport = dedent`
-  import { FluentBundle, FluentArgument } from '@fluent/bundle'
+  import { FluentBundle, FluentVariable } from '@fluent/bundle'
 
   declare global {
     interface FluentBundleTyped extends FluentBundle {
@@ -16,7 +16,7 @@ const vanillaSupport = dedent`
 `
 
 const i18NextSupport = dedent`
-  import { FluentArgument } from '@fluent/bundle'
+  import { FluentVariable } from '@fluent/bundle'
   import { TransProps } from 'react-i18next'
 
   declare module 'react-i18next' {
