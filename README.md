@@ -144,3 +144,19 @@ bundle.formatPattern(helloMessage.value, { place: 'second', amount: 0 }) // ok
 bundle.formatPattern(helloMessage.value, { place: 'first' }) // error
 bundle.formatPattern(helloMessage.value, { place: 'second' }) // error
 ```
+
+# Developing fluent-typescript
+
+When developing `fluent-typescript`, is important to build and watch, so you could check the changes automatically on the examples apps:
+
+```
+> npm run start
+```
+
+Check the readme on each example's folders to learn how to run them.
+
+You also could and run tests:
+
+```
+> npm run test
+```
