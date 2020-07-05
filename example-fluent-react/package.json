@@ -1,0 +1,27 @@
+{
+  "name": "fluent-typescript-example-fluent-react",
+  "version": "0.0.1",
+  "repository": {},
+  "license": "MIT",
+  "main": "src/index.tsx",
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open --config webpack.config.js"
+  },
+  "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "@fluent/bundle": "0.16.0",
+    "@fluent/react": "0.13.0",
+    "@fluent/langneg": "0.5.0"
+  },
+  "devDependencies": {
+    "@types/react-dom": "16.9.7",
+    "html-webpack-plugin": "4.3.0",
+    "file-loader": "5.0.2",
+    "ts-loader": "6.2.1",
+    "typescript": "3.8.3",
+    "webpack": "4.43.0",
+    "webpack-cli": "3.3.11",
+    "webpack-dev-server": "3.11.0"
+  }
+}
