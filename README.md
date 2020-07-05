@@ -14,6 +14,7 @@
 Fluent client supported:
 - [x] vanilla (just [`@fluent/bundle`](https://www.npmjs.com/package/@fluent/bundle))
 - [x] [`react-18next`](https://www.npmjs.com/package/react-i18next)
+- [x] [`fluent-react`](https://github.com/projectfluent/fluent.js/tree/master/fluent-react)
 
 > :warning: It's a working in process project! At this moment, **you should not use it on production**!
 
@@ -102,6 +103,43 @@ Now, your FTL files will be compiled into a `.d.ts`, and the type of `t` functio
 
 Finish! Now you have amazing types on your translations messages 🎉
 
+### fluent-react
+
+> You could check a complete example on [`/example-fluent-react`](/example-fluent-react) folder. Check its readme.
+
+1 - Add this script on your `package.json` config:
+
+```js
+{
+  "scripts": {
+    "fluent-typescript": "./node_modules/.bin/fluent-typescript fluent-react ./assets/locales/"
+  }
+},
+```
+
+The argument `./assets/locales/` is the path where the type definition file will be saved.
+
+2 - Run `fluent-typescript`:
+
+```
+> npm run fluent-typescript
+```
+
+Now, your FTL files will be compiled into a `.d.ts`, and the type of `Localized` component from `@fluent/react` will be patched!
+
+To use the patched version of `Localized`, you should add the prop `typed`. For example:
+
+```diff
+-<Localized id='hello' vars={{ firstName, lastName }}>
++<Localized typed id='hello' vars={{ firstName, lastName }}>
+  <h1>Hello!</h1>
+</Localized>
+```
+
+> :warning: At this moment, it only works with `Localized`. Always when possible, prefer to use that instead of `useLocalization`, because you have type safe only with `Localized` component.
+
+Finish! Now you have amazing types on your translations messages 🎉
+
 # How types are compiled
 
 ## Asymmetric translations
@@ -143,4 +181,20 @@ bundle.formatPattern(helloMessage.value, { place: 'first', amount: 0.1 }) // ok
 bundle.formatPattern(helloMessage.value, { place: 'second', amount: 0 }) // ok
 bundle.formatPattern(helloMessage.value, { place: 'first' }) // error
 bundle.formatPattern(helloMessage.value, { place: 'second' }) // error
+```
+
+# Developing fluent-typescript
+
+When developing `fluent-typescript`, is important to build and watch, so you could check the changes automatically on the examples apps:
+
+```
+> npm run start
+```
+
+Check the readme on each example's folders to learn how to run them.
+
+You also could and run tests:
+
+```
+> npm run test
 ```

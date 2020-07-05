@@ -7,7 +7,7 @@ type Message<T extends MessagesKey> = {
   attributes: Record<string, T>
 }
 
-import { FluentBundle, FluentArgument } from '@fluent/bundle'
+import { FluentBundle, FluentVariable } from '@fluent/bundle'
 
 declare global {
   interface FluentBundleTyped extends FluentBundle {
@@ -21,7 +21,7 @@ type MessagesKey = 'hello' |
 'bye'
 type PatternArguments<T extends MessagesKey> = (
   T extends 'hello'
-  ? [T, { 'firstName': FluentArgument,'lastName': FluentArgument }]:
+  ? [T, { 'firstName': FluentVariable,'lastName': FluentVariable }]:
 T extends 'how-are-you'
   ? [T]:
 T extends 'bye'

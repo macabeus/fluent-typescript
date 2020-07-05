@@ -2,7 +2,7 @@ import dedent from 'dedent-js'
 
 type Variables = MessageVariable[]
 
-const wrapVariables = (variables: Variables) => variables.map(i => `'${i}': FluentArgument`)
+const wrapVariables = (variables: Variables) => variables.map(i => `'${i}': FluentVariable`)
 
 const hasVariables = (variables: Variables) => variables.length > 0
 

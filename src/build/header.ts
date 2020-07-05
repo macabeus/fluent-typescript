@@ -5,7 +5,7 @@ const bannerMessage = (
 )
 
 const vanillaSupport = dedent`
-  import { FluentBundle, FluentArgument } from '@fluent/bundle'
+  import { FluentBundle, FluentVariable } from '@fluent/bundle'
 
   declare global {
     interface FluentBundleTyped extends FluentBundle {
@@ -16,7 +16,7 @@ const vanillaSupport = dedent`
 `
 
 const i18NextSupport = dedent`
-  import { FluentArgument } from '@fluent/bundle'
+  import { FluentVariable } from '@fluent/bundle'
   import { TransProps } from 'react-i18next'
 
   declare module 'react-i18next' {
@@ -28,9 +28,35 @@ const i18NextSupport = dedent`
   }
 `
 
+const fluentReactSupport = dedent`
+  import { FluentVariable } from '@fluent/bundle'
+  import { LocalizedProps } from '@fluent/react'
+  import { ReactElement } from 'react'
+
+  declare module '@fluent/react' {
+    type LocalizedPropsWithoutIdAndVars = Omit<Omit<LocalizedProps, 'id'>, 'vars'>
+
+    type LocalizedPropsPatched<T extends MessagesKey> = (
+      PatternArguments<T>[1] extends undefined
+        ? {
+          typed: true
+          id: T
+        } & LocalizedPropsWithoutIdAndVars
+        : {
+          typed: true
+          id: T
+          vars: PatternArguments<T>[1]
+        } & LocalizedPropsWithoutIdAndVars
+    )
+
+    function Localized<T extends MessagesKey>(props: LocalizedPropsPatched<T>): ReactElement;
+  }
+`
+
 const targetSupport: { [key in TargetsSupported]: string } = {
   vanilla: vanillaSupport,
   'react-18next': i18NextSupport,
+  'fluent-react': fluentReactSupport,
 }
 
 const header = (target: TargetsSupported) => dedent`

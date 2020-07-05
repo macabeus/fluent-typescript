@@ -9,7 +9,7 @@
     "fluent-typescript": "./node_modules/.bin/fluent-typescript vanilla ./assets/locales/"
   },
   "dependencies": {
-    "@fluent/bundle": "0.15.1"
+    "@fluent/bundle": "0.16.0"
   },
   "devDependencies": {
     "fluent-typescript": "file:../",
