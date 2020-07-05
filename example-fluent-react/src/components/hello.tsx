@@ -13,7 +13,7 @@ const Hello = () => {
       {
         userName
           ?
-          <Localized id='hello' vars={{ firstName, lastName }}>
+          <Localized typed id='hello' vars={{ firstName, lastName }}>
             <h1>Hello!</h1>
           </Localized>
           :
@@ -22,7 +22,7 @@ const Hello = () => {
           </Localized>
       }
 
-      <Localized id='type-name' attrs={{ placeholder: true }}>
+      <Localized typed id='type-name' attrs={{ placeholder: true }}>
         <input
           type='text'
           placeholder='Type your name'

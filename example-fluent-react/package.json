@@ -5,7 +5,8 @@
   "license": "MIT",
   "main": "src/index.tsx",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open --config webpack.config.js"
+    "start": "webpack-dev-server --mode development --open --config webpack.config.js",
+    "fluent-typescript": "./node_modules/.bin/fluent-typescript fluent-react ./assets/locales/"
   },
   "dependencies": {
     "react": "16.13.1",
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@types/react-dom": "16.9.7",
+    "fluent-typescript": "file:../",
     "html-webpack-plugin": "4.3.0",
     "file-loader": "5.0.2",
     "ts-loader": "6.2.1",

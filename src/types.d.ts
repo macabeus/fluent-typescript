@@ -1,6 +1,6 @@
 type Tag<K, T> = K & { __tag: T }
 
-type TargetsSupported = 'vanilla' | 'react-18next'
+type TargetsSupported = 'vanilla' | 'react-18next' | 'fluent-react'
 
 type MessageIdentifier = Tag<string, 'MessageIdentifier'>
 type MessageVariable = Tag<string, 'MessageVariable'>
