@@ -7,27 +7,56 @@ const wrapVariables = (variables: Variables) => variables.map(i => `'${i}': Flue
 const hasVariables = (variables: Variables) => variables.length > 0
 
 const buildTypePatternArguments = (messagesVariables: MessageVariablesMap) => {
-  const options = Object.entries(messagesVariables)
-    .map(([message, variables]) => {
-      if (hasVariables(variables)) {
-        return dedent`
-          T extends '${message}'
-            ? [T, { ${wrapVariables(variables).join(',')} }]
+  const options = Object.entries(messagesVariables);
+
+  const batchSize = 25;
+  let returnValue: string = '';
+  for (let index = 0; index < options.length; index++) {
+    const [message, variables] = options[index];
+
+
+
+    if (index % batchSize === 0) {
+      if (index > 0) {
+        returnValue += dedent`
+        : never
+        )
+        
         `
       }
-
-      return dedent`
-        T extends '${message}'
-          ? [T]
+      returnValue += dedent`
+      type PatternArguments${index / batchSize}<T extends MessagesKey${index / batchSize}> = ( 
       `
-    }).join(':\n')
+    }
 
-  return dedent`
-    type PatternArguments<T extends MessagesKey> = (
-      ${options}
-      : never
-    )
-  `
+    if (index % batchSize > 0) {
+      returnValue += ':\n';
+    }
+
+    if (hasVariables(variables)) {
+      returnValue += dedent`
+        T extends '${message}'
+          ? [T, { ${wrapVariables(variables).join(',')} }]
+      `
+    } else {
+      returnValue += dedent`
+      T extends '${message}'
+        ? [T]
+    `
+    }
+
+
+  }
+  returnValue += dedent`
+        : never
+        )
+        
+        `
+  return returnValue;
+
+
+
+
 }
 
 export default buildTypePatternArguments

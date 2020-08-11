@@ -8,7 +8,7 @@ const build = (target: TargetsSupported) => {
   const messagesVariables = getMessagesVariables()
 
   const fluentTypeModule = dedent`
-    ${buildHeader(target)}
+    ${buildHeader(target,messagesVariables)}
     ${buildTypeMessagesKey(messagesVariables)}
     ${buildTypePatternArguments(messagesVariables)}
   `
