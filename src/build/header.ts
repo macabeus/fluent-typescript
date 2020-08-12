@@ -23,18 +23,25 @@ const vanillaSupport = (messagesVariables: BatchList) => {
 }
 
 
-const i18NextSupport = (messagesVariables: BatchList) => dedent`
+const i18NextSupport = (messagesVariables: BatchList) => {
+
+  const methods = messagesVariables.map((_, index) => `t<T extends MessagesKey${index}>(...args: PatternArguments${index}<T>) : string`
+
+  ).join('\n    ')
+
+  return dedent`
   import { FluentVariable } from '@fluent/bundle'
   import { TransProps } from 'react-i18next'
 
   declare module 'react-i18next' {
     interface UseTranslationResponsePatched extends Omit<UseTranslationResponse, 't'> {
-      t: <T extends MessagesKey>(...args: PatternArguments<T>) => string
+      ${methods}
     }
 
     function useTranslation(ns?: Namespace, options?: UseTranslationOptions): UseTranslationResponsePatched
   }
 `
+}
 
 const fluentReactSupport = (messagesVariables: BatchList) => dedent`
   import { FluentVariable } from '@fluent/bundle'
