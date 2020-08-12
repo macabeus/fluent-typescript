@@ -5,7 +5,7 @@ const buildTypeMessagesKey = (messagesVariables: BatchList) => {
   return messagesVariables.map((subarray, index) => {
 
     const elements = subarray.map(([key]) => {
-      return key
+      return `'${key}'`
     }).join(' |\n')
 
     return dedent`
