@@ -1,28 +1,17 @@
 import dedent from 'dedent-js'
 
-const buildTypeMessagesKey = (messagesVariables: MessageVariablesMap) => {
-  const messages = Object.keys(messagesVariables)
+const buildTypeMessagesKey = (messagesVariables: BatchList) => {
 
-  const batchSize = 25
-  let returnValue = ''
-  for (let index = 0; index < messages.length; index++) {
+  return messagesVariables.map((subarray, index) => {
 
-    if (index % batchSize === 0) {
-      returnValue = dedent`
-        ${returnValue}
-        type MessagesKey${index / batchSize} = 
-      `
-    }
+    const elements = subarray.map(([key]) => {
+      return key
+    }).join(' |\n')
 
-    if (index % batchSize > 0) {
-      returnValue += ' |\n'
-    }
-
-    const element = messages[index]
-    returnValue += `'${element}'`
-  }
-
-  return returnValue
+    return dedent`
+    type MessagesKey${index} = ${elements}
+    `
+  }).join('\n\n')
 }
 
 export default buildTypeMessagesKey
