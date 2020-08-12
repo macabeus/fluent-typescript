@@ -48,15 +48,11 @@ const buildTypePatternArguments = (messagesVariables: MessageVariablesMap) => {
 
   }
   returnValue += dedent`
-        : never
-        )
-        
-        `
-  return returnValue;
+      : never
+    )
+  `
 
-
-
-
+  return returnValue
 }
 
 export default buildTypePatternArguments

@@ -5,23 +5,27 @@ const bannerMessage = (
 )
 
 const vanillaSupport = (messagesVariables: MessageVariablesMap) => {
-
-
-  const batchSize = 25;
-
-  let numberOfBatches = Math.ceil(Object.keys(messagesVariables).length / batchSize);
+  const batchSize = 25
+  const numberOfBatches = Math.ceil(Object.keys(messagesVariables).length / batchSize)
 
   let returnValue = ''
-
   for (let index = 0; index < numberOfBatches; index++) {
     returnValue += dedent`
-
-    getMessage<T extends MessagesKey${index}>(id: T): Message${index}<T>
-      formatPattern<T extends MessagesKey${index}>(...args: PatternArguments${index}<T>) : string
-
-
-      `
+      getMessage<T extends MessagesKey${index}>(id: T): Message${index}<T>
+        formatPattern<T extends MessagesKey${index}>(...args: PatternArguments${index}<T>) : string
+    `
   }
+
+  return dedent`
+    import { FluentBundle, FluentVariable } from '@fluent/bundle'
+
+    declare global {
+      interface FluentBundleTyped extends FluentBundle {
+      ${returnValue}      
+      }
+    }
+  `
+}
 
 
 
@@ -80,20 +84,17 @@ const targetSupport: { [key in TargetsSupported]: (messagesVariables: MessageVar
 }
 
 const header = (target: TargetsSupported, messagesVariables: MessageVariablesMap) => {
-  const batchSize = 25;
-
-  let numberOfBatches = Math.ceil(Object.keys(messagesVariables).length / batchSize);
+  const batchSize = 25
+  const numberOfBatches = Math.ceil(Object.keys(messagesVariables).length / batchSize)
 
   let returnValue = ''
-
   for (let index = 0; index < numberOfBatches; index++) {
     returnValue += dedent`
-    type Message${index}<T extends MessagesKey${index}> = {
-      id: T
-      value: T
-      attributes: Record<string, T>
-    }
-    
+      type Message${index}<T extends MessagesKey${index}> = {
+        id: T
+        value: T
+        attributes: Record<string, T>
+      }
     `
   }
 
@@ -103,6 +104,7 @@ const header = (target: TargetsSupported, messagesVariables: MessageVariablesMap
   ${targetSupport[target](messagesVariables)}
 `
 }
+
 const buildHeader = (target: TargetsSupported, messagesVariables: MessageVariablesMap) => `${bannerMessage}${header(target, messagesVariables)}\n`
 
 export default buildHeader
