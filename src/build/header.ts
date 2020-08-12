@@ -16,7 +16,7 @@ const vanillaSupport = (messagesVariables: BatchList) => {
 
     declare global {
       interface FluentBundleTyped extends FluentBundle {
-        ${methods}      
+        ${methods}
       }
     }
   `

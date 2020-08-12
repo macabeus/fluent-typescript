@@ -22,7 +22,7 @@ const buildTypePatternArguments = (messagesVariables: BatchList) => {
           ? [T]
       `
       }
-    }).join(' :\n')
+    }).join(':\n')
 
     return dedent`
     type PatternArguments${index}<T extends MessagesKey${index}> = (
