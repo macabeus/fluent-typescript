@@ -6,30 +6,32 @@ const wrapVariables = (variables: Variables) => variables.map(i => `'${i}': Flue
 
 const hasVariables = (variables: Variables) => variables.length > 0
 
-const buildTypePatternArguments = (messagesVariables: BatchList) => {
+const buildTypePatternArguments = (chunks: MessageVariablesChunks) =>
+  chunks
+    .map((subarray, index) => {
+      const elements = subarray
+        .map(([message, variables]) => {
+          if (hasVariables(variables)) {
+            return dedent`
+              T extends '${message}'
+                ? [T, { ${wrapVariables(variables).join(',')} }]
+            `
+          }
 
-  return messagesVariables.map((subarray, index) => {
-    const elements = subarray.map(entry => {
-      const [message, variables] = entry
-      if (hasVariables(variables)) {
-        return dedent`
-          T extends '${message}'
-            ? [T, { ${wrapVariables(variables).join(',')} }]
-        `
-      } else {
-        return dedent`
-        T extends '${message}'
-          ? [T]
+          return dedent`
+            T extends '${message}'
+              ? [T]
+          `
+        })
+        .join(':\n')
+
+      return dedent`
+        type PatternArguments${index}<T extends MessagesKey${index}> = (
+          ${elements}
+          : never
+        )
       `
-      }
-    }).join(':\n')
-
-    return dedent`
-    type PatternArguments${index}<T extends MessagesKey${index}> = (
-      ${elements}
-      : never
-    )`
-  }).join('\n\n')
-}
+    })
+    .join('\n\n')
 
 export default buildTypePatternArguments

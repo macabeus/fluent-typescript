@@ -13,4 +13,4 @@ type CliFluentFile = {
   content: string
 }
 
-type BatchList = [string, Tag<string,"MessageVariable">[]][][]
+type MessageVariablesChunks = [string, MessageVariable[]][][]
