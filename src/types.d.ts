@@ -12,3 +12,5 @@ type CliFluentFile = {
   path: string
   content: string
 }
+
+type MessageVariablesChunks = [string, MessageVariable[]][][]
