@@ -3,6 +3,7 @@
 const chokidar = require('chokidar')
 const fs = require('fs')
 const glob = require('glob')
+const { normalize } = require('path')
 const { start, updateContent, buildFluentTypeModule, targetsSupported } = require('../dist')
 
 const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath) => {
@@ -29,7 +30,7 @@ const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepat
 
   glob('**/*.ftl', { ignore: ['node_modules/**/*', '.git/**/*'] }, (errors, matches) => {
     const files = matches.map(path => ({
-      path,
+      path: normalize(path),
       content: fileSystemApi.readFileSync(path, { encoding: 'utf-8' }),
     }))
 
