@@ -42,6 +42,14 @@ const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepat
 
   watcher
     .on('ready', () => console.log('🎬 Ready!'))
+    .on('unlink', (path) => {
+      console.log(`🔍 File was deleted: ${path}`)
+
+      const content = ''
+      updateContent({ path, content })
+
+      emitFluentTypeModule()
+    })
     .on('change', (path) => {
       console.log(`🔍 File was changed: ${path}`)
 
