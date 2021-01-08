@@ -59,5 +59,11 @@ if (require.main === module) {
     return
   }
 
+  if (noWatchFlag !== undefined) {
+    console.error(`❌ Error: Unknown flag "${noWatchFlag}"`)
+    console.error('Example: fluent-typescript vanilla ./assets/locales/ --no-watch')
+    return
+  }
+
   startWatcher(fs, typeDefinitionTarget, typeDefinitionFilepath)
 }
