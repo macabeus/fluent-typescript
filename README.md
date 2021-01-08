@@ -140,6 +140,18 @@ To use the patched version of `Localized`, you should add the prop `typed`. For 
 
 Finish! Now you have amazing types on your translations messages 🎉
 
+## Flags
+
+### --no-watch
+
+If you just want to emit the type definition, without running the watcher, you can use the flag `--no-watch`.
+
+For instance:
+
+```
+> fluent-typescript vanilla ./assets/locales/ --no-watcha
+```
+
 # How types are compiled
 
 ## Asymmetric translations

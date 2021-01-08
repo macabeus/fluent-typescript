@@ -2,41 +2,12 @@
 
 const chokidar = require('chokidar')
 const fs = require('fs')
-const glob = require('glob')
-const { normalize } = require('path')
-const { start, updateContent, buildFluentTypeModule, targetsSupported } = require('../dist')
+const { updateContent, targetsSupported } = require('../dist')
+const { emitFluentTypeModule } = require('./emit-fluent-type-module')
+const { runFluentTypescript } = require('./run-fluent-typescript')
 
 const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath) => {
-  const typeDefinitionFilename = `${typeDefinitionFilepath}/translations.ftl.d.ts`
-
-  const emitFluentTypeModule = () => {
-    const fluentTypeModule = buildFluentTypeModule(typeDefinitionTarget)
-
-    fileSystemApi.writeFile(
-      typeDefinitionFilename,
-      fluentTypeModule,
-      { encoding: 'utf-8' },
-      (err) => {
-        if (err) {
-          console.log('❌ Error')
-          console.log(err)
-          return
-        }
-
-        console.log(`🏁 Type definition updated: ${typeDefinitionFilename}`)
-      }
-    )
-  }
-
-  glob('**/*.ftl', { ignore: ['node_modules/**/*', '.git/**/*'] }, (errors, matches) => {
-    const files = matches.map(path => ({
-      path: normalize(path),
-      content: fileSystemApi.readFileSync(path, { encoding: 'utf-8' }),
-    }))
-
-    start(files)
-    emitFluentTypeModule()
-  })
+  runFluentTypescript(fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath)
 
   const watcher = chokidar.watch('**/*.ftl', { ignored: ['node_modules/**/*', '.git/**/*'] })
 
@@ -56,13 +27,14 @@ const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepat
       const content = fileSystemApi.readFileSync(path, { encoding: 'utf-8' })
       updateContent({ path, content })
 
-      emitFluentTypeModule()
+      emitFluentTypeModule(fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath)
     })
 }
 
 if (require.main === module) {
   const typeDefinitionTarget = process.argv[2]
   const typeDefinitionFilepath = process.argv[3]
+  const noWatchFlag = process.argv[4]
 
   if (typeDefinitionTarget === undefined) {
     console.error('❌ Error: missing argument with the target!')
@@ -79,6 +51,17 @@ if (require.main === module) {
   if (typeDefinitionFilepath === undefined) {
     console.error('❌ Error: missing argument with the path to save the type definition file!')
     console.error('Example: fluent-typescript vanilla ./assets/locales/')
+    return
+  }
+
+  if (noWatchFlag === '--no-watch') {
+    runFluentTypescript(fs, typeDefinitionTarget, typeDefinitionFilepath)
+    return
+  }
+
+  if (noWatchFlag !== undefined) {
+    console.error(`❌ Error: Unknown flag "${noWatchFlag}"`)
+    console.error('Example: fluent-typescript vanilla ./assets/locales/ --no-watch')
     return
   }
 
