@@ -2,16 +2,12 @@
 
 const chokidar = require('chokidar')
 const fs = require('fs')
-const glob = require('glob')
-const { normalize } = require('path')
-const { start, updateContent, buildFluentTypeModule, targetsSupported } = require('../dist')
+const { updateContent, targetsSupported } = require('../dist')
+const { emitFluentTypeModule } = require('./emit-fluent-type-module')
+const { runFluentTypescript } = require('./run-fluent-typescript')
 
 const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath) => {
-  
-
-  
-
-  initFluent(fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath)
+  runFluentTypescript(fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath)
 
   const watcher = chokidar.watch('**/*.ftl', { ignored: ['node_modules/**/*', '.git/**/*'] })
 
@@ -38,7 +34,7 @@ const startWatcher = (fileSystemApi, typeDefinitionTarget, typeDefinitionFilepat
 if (require.main === module) {
   const typeDefinitionTarget = process.argv[2]
   const typeDefinitionFilepath = process.argv[3]
-  const noWatchParameter = process.argv[4]
+  const noWatchFlag = process.argv[4]
 
   if (typeDefinitionTarget === undefined) {
     console.error('❌ Error: missing argument with the target!')
@@ -58,41 +54,10 @@ if (require.main === module) {
     return
   }
 
-  if (noWatchParameter !== '--no-watch') {
-    startWatcher(fs, typeDefinitionTarget, typeDefinitionFilepath)
-  } else {
-    initFluent(fs, typeDefinitionTarget, typeDefinitionFilepath)
+  if (noWatchFlag === '--no-watch') {
+    runFluentTypescript(fs, typeDefinitionTarget, typeDefinitionFilepath)
+    return
   }
+
+  startWatcher(fs, typeDefinitionTarget, typeDefinitionFilepath)
 }
-
-function emitFluentTypeModule(fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath) {
-  const fluentTypeModule = buildFluentTypeModule(typeDefinitionTarget)
-  const typeDefinitionFilename = `${typeDefinitionFilepath}/translations.ftl.d.ts`
-  fileSystemApi.writeFile(
-    typeDefinitionFilename,
-    fluentTypeModule,
-    { encoding: 'utf-8' },
-    (err) => {
-      if (err) {
-        console.log('❌ Error')
-        console.log(err)
-        return
-      }
-
-      console.log(`🏁 Type definition updated: ${typeDefinitionFilename}`)
-    }
-  )
-}
-
-function initFluent(fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath) {
-  glob('**/*.ftl', { ignore: ['node_modules/**/*', '.git/**/*'] }, (errors, matches) => {
-    const files = matches.map(path => ({
-      path: normalize(path),
-      content: fileSystemApi.readFileSync(path, { encoding: 'utf-8' }),
-    }))
-
-    start(files)
-    emitFluentTypeModule(fileSystemApi, typeDefinitionTarget, typeDefinitionFilepath)
-  })
-}
-
